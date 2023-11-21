@@ -1,0 +1,15 @@
+[package]
+name = "example-app-replica"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+atlas-common = {path = "../../Atlas/Atlas-Common"}
+atlas-smr-application = { path = "../../Atlas/Atlas-SMR-Application" }
+config = {version = "0.13.3", features = []}
+
+[dependencies.febft-pbft-consensus]
+path = "../../febft/febft-pbft-consensus"
+features = ["serialize_serde"]
