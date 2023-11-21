@@ -1,0 +1,11 @@
+[package]
+name = "example-app"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+atlas-common = {path  = "../../Atlas/Atlas-Common", features = ["serialize_serde"]}
+atlas-smr-application = {path = "../../Atlas/Atlas-SMR-Application", features = ["serialize_serde"]}
+serde = { version = "1.0", features = [] }
