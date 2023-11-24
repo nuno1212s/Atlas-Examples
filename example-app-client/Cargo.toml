@@ -6,4 +6,17 @@ edition = "2021"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-atlas-common = {path = "../../Atlas/Atlas-Common"}
+anyhow = "1.0.75"
+thiserror = "1.0.50"
+atlas-common = { path = "../../Atlas/Atlas-Common" }
+atlas-client = { path = "../../Atlas/Atlas-Client" }
+atlas-communication = {path = "../../Atlas/Atlas-Communication"}
+atlas-core = {path = "../../Atlas/Atlas-Core"}
+atlas-reconfiguration = {path = "../../Atlas/Atlas-Reconfiguration"}
+example-app = { path = "../example-app" }
+
+config = "0.13.4"
+serde = { version = "1", features = ["derive"] }
+
+rustls = "0.21"
+rustls-pemfile = "1"

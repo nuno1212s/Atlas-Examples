@@ -9,3 +9,6 @@ edition = "2021"
 atlas-common = {path  = "../../Atlas/Atlas-Common", features = ["serialize_serde"]}
 atlas-smr-application = {path = "../../Atlas/Atlas-SMR-Application", features = ["serialize_serde"]}
 serde = { version = "1.0", features = [] }
+bincode = "2.0.0-rc.3"
+anyhow = "1.0.75"
+thiserror = "1.0.50"
