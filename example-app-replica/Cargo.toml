@@ -6,12 +6,29 @@ edition = "2021"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-atlas-common = {path = "../../Atlas/Atlas-Common"}
-atlas-smr-application = { path = "../../Atlas/Atlas-SMR-Application" }
-config = {version = "0.13.3", features = []}
+atlas-default-configs = { path = "../../atlas-tools/atlas-default-configs" }
+
+atlas-common = { path = "../../Atlas/Atlas-Common", features = ["serialize_serde"] }
+atlas-smr-application = { path = "../../Atlas/Atlas-SMR-Application", features = ["serialize_serde"] }
+atlas-core = { path = "../../Atlas/Atlas-Core", features = ["serialize_serde"] }
+atlas-decision-log = { path = "../../Atlas/Atlas-Decision-Log", features = ["serialize_serde"] }
+atlas-view-transfer = { path = "../../Atlas/Atlas-View-Transfer", features = ["serialize_serde"] }
+atlas-log-transfer = { path = "../../Atlas/Atlas-Log-Transfer", features = ["serialize_serde"] }
+febft-state-transfer = { path = "../../febft/febft-state-transfer", features = ["serialize_serde"] }
+atlas-persistent-log = { path = "../../Atlas/Atlas-Persistent-Log", features = ["serialize_serde"] }
+atlas-reconfiguration = { path = "../../Atlas/Atlas-Reconfiguration", features = ["serialize_serde"] }
+atlas-communication = { path = "../../Atlas/Atlas-Communication", features = ["serialize_serde"] }
+atlas-smr-replica = { path = "../../Atlas/Atlas-SMR-Replica", features = ["serialize_serde"] }
+atlas-smr-execution = { path = "../../Atlas/Atlas-SMR-Execution" }
+
+config = { version = "0.13.3", features = [] }
 serde = { version = "1.0.193", features = ["derive"] }
 anyhow = "1.0.75"
 thiserror = "1.0.50"
+clap = { version = "4.4.9", features = ["derive"] }
+
+example-app = { path = "../example-app" }
+log = "0.4.20"
 
 [dependencies.febft-pbft-consensus]
 path = "../../febft/febft-pbft-consensus"

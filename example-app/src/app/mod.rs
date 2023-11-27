@@ -5,6 +5,12 @@ use crate::state::CalculatorState;
 
 pub struct App;
 
+impl App {
+    pub fn init() -> Self {
+        Self {}
+    }
+}
+
 impl Application<CalculatorState> for App {
     type AppData = messages::AppData;
 

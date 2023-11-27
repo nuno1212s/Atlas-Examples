@@ -5,10 +5,8 @@ use atlas_client::client::unordered_client::UnorderedClientMode;
 use atlas_client::concurrent_client::ConcurrentClient;
 use atlas_common::async_runtime;
 use atlas_communication::config::MioConfig;
-use atlas_communication::FullNetworkNode;
 use atlas_communication::mio_tcp::MIOTcpNode;
 use atlas_core::ordering_protocol::OrderProtocolTolerance;
-use atlas_core::reconfiguration_protocol::ReconfigurationProtocol;
 use atlas_core::serialize::ClientServiceMsg;
 use atlas_default_configs::{get_mio_config, get_reconfig_config};
 use atlas_reconfiguration::config::ReconfigurableNetworkConfig;
@@ -27,7 +25,7 @@ pub type ExampleClient = Client<ReconfProtocol, AppData, ClientNetwork>;
 
 pub fn init_client_config(client_mode: UnorderedClientMode, network_config: MioConfig, reconfig: ReconfigurableNetworkConfig) -> Result<ClientConfig<ReconfProtocol, AppData, ClientNetwork>> {
     Ok(ClientConfig {
-        unordered_rq_mode: UnorderedClientMode::BFT,
+        unordered_rq_mode: client_mode,
         node: network_config,
         reconfiguration: reconfig,
     })
