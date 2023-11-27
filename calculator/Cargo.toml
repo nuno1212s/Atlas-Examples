@@ -1,4 +1,4 @@
-description = "An Atlas example application"
+description = "An Atlas example application, which implements a simple calculator with a value stored on the replica"
 authors = ["Nuno Neto <nuno.martingo@fc.up.pt>"]
 license = "MIT"
 homepage = "https://github.com/nuno1212s/atlas"
