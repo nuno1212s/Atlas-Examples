@@ -9,6 +9,9 @@ edition = "2021"
 atlas-common = {path = "../../Atlas/Atlas-Common"}
 atlas-smr-application = { path = "../../Atlas/Atlas-SMR-Application" }
 config = {version = "0.13.3", features = []}
+serde = { version = "1.0.193", features = ["derive"] }
+anyhow = "1.0.75"
+thiserror = "1.0.50"
 
 [dependencies.febft-pbft-consensus]
 path = "../../febft/febft-pbft-consensus"

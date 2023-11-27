@@ -1,26 +1,21 @@
-mod crypto;
+use anyhow::Result;
 
-use std::net::SocketAddr;
-use config::{Config, File};
-use config::FileFormat::Toml;
-use atlas_client::client::Client;
-use atlas_common::node_id::{NodeId, NodeType};
+use atlas_client::client::{Client, ClientConfig};
+use atlas_client::client::unordered_client::UnorderedClientMode;
+use atlas_client::concurrent_client::ConcurrentClient;
+use atlas_common::async_runtime;
+use atlas_communication::config::MioConfig;
+use atlas_communication::FullNetworkNode;
 use atlas_communication::mio_tcp::MIOTcpNode;
+use atlas_core::ordering_protocol::OrderProtocolTolerance;
+use atlas_core::reconfiguration_protocol::ReconfigurationProtocol;
 use atlas_core::serialize::ClientServiceMsg;
+use atlas_default_configs::{get_mio_config, get_reconfig_config};
 use atlas_reconfiguration::config::ReconfigurableNetworkConfig;
-use atlas_reconfiguration::message::{NodeTriple, ReconfData};
+use atlas_reconfiguration::message::ReconfData;
 use atlas_reconfiguration::network_reconfig::NetworkInfo;
 use atlas_reconfiguration::ReconfigurableNodeProtocol;
-use anyhow::Result;
-use atlas_client::client::unordered_client::UnorderedClientMode;
-use atlas_common::peer_addr::PeerAddr;
-use example_app::app::App;
 use example_app::app::messages::AppData;
-use crate::settings::node_config::{get_network_config, init_client_config, Node, NodeConfig, read_node_config};
-
-pub mod settings {
-    pub mod node_config;
-}
 
 pub type Network<S> = MIOTcpNode<NetworkInfo, ReconfData, S>;
 
@@ -28,53 +23,43 @@ pub type ClientNetwork = Network<ClientServiceMsg<AppData>>;
 
 /// Set up the protocols with the types that have been built up to here
 pub type ReconfProtocol = ReconfigurableNodeProtocol;
-pub type ExampleClient = Client<ReconfProtocol, App, ClientNetwork>;
+pub type ExampleClient = Client<ReconfProtocol, AppData, ClientNetwork>;
 
-fn setup_reconfiguration(known_nodes_config: NodeConfig) -> Result<ReconfigurableNetworkConfig> {
-
-    let node = &known_nodes_config.own_node;
-
-    let node_id = NodeId(node.node_id);
-
-    let own_node = crypto::read_own_keypair(&node_id)?;
-
-    let peer_addr = PeerAddr::new(SocketAddr::new(node.ip.parse()?, node.port), node.hostname.clone());
-
-    let mut known_nodes = vec![];
-
-    for bootstrap_node in known_nodes_config.bootstrap_nodes {
-        let node_id = NodeId(bootstrap_node.node_id);
-
-        let peer_addr = PeerAddr::new(SocketAddr::new(bootstrap_node.ip.parse()?, bootstrap_node.port), bootstrap_node.hostname.clone());
-
-        known_nodes.push(NodeTriple::new(node_id, crypto::read_pk_of(&node_id)?.pk_bytes().to_vec(), peer_addr, NodeType::Replica));
-    }
-
-    Ok(ReconfigurableNetworkConfig {
-        node_id,
-        node_type: NodeType::Client,
-        key_pair: own_node,
-        our_address: peer_addr,
-        known_nodes,
+pub fn init_client_config(client_mode: UnorderedClientMode, network_config: MioConfig, reconfig: ReconfigurableNetworkConfig) -> Result<ClientConfig<ReconfProtocol, AppData, ClientNetwork>> {
+    Ok(ClientConfig {
+        unordered_rq_mode: UnorderedClientMode::BFT,
+        node: network_config,
+        reconfiguration: reconfig,
     })
 }
 
+pub struct BFT;
+
+impl OrderProtocolTolerance for BFT {
+    fn get_n_for_f(f: usize) -> usize {
+        return 3 * f + 1;
+    }
+
+    fn get_quorum_for_n(n: usize) -> usize {
+        return Self::get_f_for_n(n) * 2 + 1;
+    }
+
+    fn get_f_for_n(n: usize) -> usize {
+        return (n - 1) / 3;
+    }
+}
+
 fn main() {
-    let node_config = File::new("config/nodes.toml", Toml).required(true);
+    let reconfig_config = get_reconfig_config().unwrap();
 
-    let node_config = read_node_config(node_config).unwrap();
+    let node_id = reconfig_config.node_id;
 
-    let id = NodeId(node_config.own_node.node_id);
+    let network_conf = get_mio_config(node_id).unwrap();
 
-    println!("{:?}", node_config);
+    let client_cfg = init_client_config(UnorderedClientMode::BFT, network_conf, reconfig_config).unwrap();
 
-    let reconfiguration_config = setup_reconfiguration(node_config).unwrap();
+    let client = async_runtime::block_on(ExampleClient::bootstrap::<BFT>(node_id, client_cfg)).unwrap();
 
-    let ntwrk = get_network_config(File::new("config/network.toml", Toml).required(true)).unwrap();
-
-    let client_cfg = init_client_config(UnorderedClientMode::BFT, ntwrk, reconfiguration_config).unwrap();
-
-    let client = ExampleClient::bootstrap::<ReconfProtocol>(id, client_cfg).unwrap();
-
-
+    // Initialize a concurrent client from the existing client
+    let concurrent_client = ConcurrentClient::from_client(client, 10).unwrap();
 }
