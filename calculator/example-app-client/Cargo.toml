@@ -6,8 +6,8 @@ edition = "2021"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-anyhow = "1.0.75"
-thiserror = "1.0.50"
+anyhow = "1.0"
+thiserror = "1.0"
 atlas-common = { path = "../../../Atlas/Atlas-Common" }
 atlas-client = { path = "../../../Atlas/Atlas-Client" }
 atlas-communication = { path = "../../../Atlas/Atlas-Communication" }
