@@ -8,17 +8,19 @@ edition = "2021"
 [dependencies]
 anyhow = "1.0"
 thiserror = "1.0"
-atlas-common = { path = "../../../Atlas/Atlas-Common" }
-atlas-client = { path = "../../../Atlas/Atlas-Client" }
-atlas-communication = { path = "../../../Atlas/Atlas-Communication" }
-atlas-core = { path = "../../../Atlas/Atlas-Core" }
-atlas-reconfiguration = { path = "../../../Atlas/Atlas-Reconfiguration" }
-atlas-default-configs = { path = "../../../atlas-tools/atlas-default-configs" }
-atlas-smr-application = { path = "../../../Atlas/Atlas-SMR-Application" }
+atlas-common = { path = "../../../Atlas-Common", features = ["serialize_serde"] }
+atlas-client = { path = "../../../Atlas-Client", features = ["serialize_serde"] }
+atlas-communication = { path = "../../../Atlas-Communication", features = ["serialize_serde"] }
+atlas-comm-mio = { path = "../../../Atlas-Comm-MIO" }
+atlas-core = { path = "../../../Atlas-Core", features = ["serialize_serde"] }
+atlas-smr-core = { path = "../../../Atlas-SMR-Core" }
+atlas-reconfiguration = { path = "../../../Atlas-Reconfiguration", features = ["serialize_serde"] }
+atlas-default-configs = { path = "../../../Atlas-Tools/atlas-default-configs" }
+atlas-smr-application = { path = "../../../Atlas-SMR-Application" }
 example-app = { path = "../example-app" }
 
 config = "0.13.4"
 serde = { version = "1", features = ["derive"] }
 
-rustls = "0.21"
-rustls-pemfile = "1"
+rustls = "0.22"
+rustls-pemfile = "2"
