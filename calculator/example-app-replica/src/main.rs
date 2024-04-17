@@ -200,7 +200,7 @@ fn main() {
     let mut replica : SMRReplica = async_runtime::block_on(MonReplica::bootstrap(mon_config)).unwrap();
 
     loop {
-        if let Err(err) = replica.run() {
+        if let Err(err) = replica.run(None) {
             error!("Error while executing replica {}", err);
         }
     }
