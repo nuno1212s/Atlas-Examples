@@ -39,6 +39,7 @@ use atlas_communication::{NodeInputStub, NodeStubController};
 use atlas_default_configs::{get_network_configurations, get_reconfig_config};
 use atlas_reconfiguration::ReconfigurableNodeProtocolHandle;
 use atlas_smr_core::networking::{ReplicaNodeWrapper, SMRReplicaNetworkNode};
+use atlas_smr_core::request_pre_processing::RequestPreProcessor;
 use atlas_smr_core::serialize::{Service, SMRSysMsg, StateSys};
 use atlas_smr_core::SMRReq;
 use atlas_smr_replica::server::Exec;
@@ -112,12 +113,11 @@ pub type Logging = MonStatePersistentLog<State, ApplicationData, OrderProtocolMe
 
 /// Set up the protocols with the types that have been built up to here
 pub type ReconfProtocol = ReconfigurableNodeProtocolHandle;
-pub type OrderProtocol = PBFTOrderProtocol<SMRReq<ApplicationData>, ProtocolNetwork>;
+pub type OrderProtocol = PBFTOrderProtocol<SMRReq<ApplicationData>, RequestPreProcessor<SMRReq<ApplicationData>>, ProtocolNetwork>;
 pub type DecisionLog = Log<SMRReq<ApplicationData>, OrderProtocol, Logging, Exec<ApplicationData>>;
 pub type LogTransferProtocol = CollabLogTransfer<SMRReq<ApplicationData>, OrderProtocol, DecisionLog, ProtocolNetwork, Logging, Exec<ApplicationData>>;
 pub type ViewTransferProt = SimpleViewTransferProtocol<OrderProtocol, ProtocolNetwork>;
 pub type StateTransferProtocol = CollabStateTransfer<State, StateTransferNetwork, Logging>;
-
 
 
 pub type SMRReplica = MonReplica<ReconfProtocol, SingleThreadedMonExecutor, State, Application,
@@ -197,7 +197,7 @@ fn main() {
     let mon_config = init_mon_replica_conf(replica_config, state_transfer,
                                            Application::init()).unwrap();
 
-    let mut replica : SMRReplica = async_runtime::block_on(MonReplica::bootstrap(mon_config)).unwrap();
+    let mut replica: SMRReplica = async_runtime::block_on(MonReplica::bootstrap(mon_config)).unwrap();
 
     loop {
         if let Err(err) = replica.run(None) {
