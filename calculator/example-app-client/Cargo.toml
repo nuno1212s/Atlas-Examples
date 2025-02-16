@@ -19,7 +19,7 @@ atlas-default-configs = { path = "../../../Atlas-Tools/atlas-default-configs" }
 atlas-smr-application = { path = "../../../Atlas-SMR-Application" }
 example-app = { path = "../example-app" }
 
-config = "0.13.4"
+config = "0"
 serde = { version = "1", features = ["derive"] }
 
 rustls = "0.22"
