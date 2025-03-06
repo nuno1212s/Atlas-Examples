@@ -46,7 +46,7 @@ impl OrderProtocolTolerance for BFT {
     }
 }
 fn main() {
-    let reconfig_config = get_reconfig_config().unwrap();
+    let reconfig_config = get_reconfig_config(None).unwrap();
 
     let node_id = reconfig_config.node_id;
 

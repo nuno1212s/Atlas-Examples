@@ -26,7 +26,6 @@ atlas-smr-core = {path = "../../../Atlas-SMR-Core"}
 config = { version = "0.13.3", features = [] }
 serde = { version = "1.0.193", features = ["derive"] }
 anyhow = "1.0"
-thiserror = "1.0"
 clap = { version = "4.4.9", features = ["derive"] }
 
 example-app = { path = "../example-app" }

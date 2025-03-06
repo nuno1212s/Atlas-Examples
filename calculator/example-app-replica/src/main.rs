@@ -155,6 +155,7 @@ pub fn init_replica_config(reconf: ReconfigurableNetworkConfig, network: MIOConf
         reconfig_node: reconf,
         vt_config: view_transfer_config,
         p: Default::default(),
+        preprocessor_threads: 1,
     };
 
     Ok(conf)
@@ -175,7 +176,7 @@ pub fn init_mon_replica_conf(replica_conf: ReplicaConf,
 fn main() {
     let replica_args = ReplicaArgs::parse();
 
-    let reconfiguration_cfg = get_reconfig_config().unwrap();
+    let reconfiguration_cfg = get_reconfig_config(None).unwrap();
 
     let (network_cfg, pool_config) = get_network_configurations(reconfiguration_cfg.node_id).unwrap();
 

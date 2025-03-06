@@ -21,7 +21,6 @@ impl Application<CalculatorState> for App {
     fn unordered_execution(&self, state: &CalculatorState, _: Request<Self, CalculatorState>) -> Reply<Self, CalculatorState> {
         messages::Reply::new(state.value())
     }
-
     fn update(&self, state: &mut CalculatorState, request: messages::Request) -> messages::Reply {
         let (op, value) = request.into();
 
