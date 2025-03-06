@@ -37,6 +37,7 @@ use atlas_comm_mio::{ByteStubType, MIOTCPNode};
 use atlas_comm_mio::config::MIOConfig;
 use atlas_communication::{NodeInputStub, NodeStubController};
 use atlas_default_configs::{get_network_configurations, get_reconfig_config};
+use atlas_default_configs::crypto::FolderPathConstructor;
 use atlas_reconfiguration::ReconfigurableNodeProtocolHandle;
 use atlas_smr_core::networking::{ReplicaNodeWrapper, SMRReplicaNetworkNode};
 use atlas_smr_core::request_pre_processing::RequestPreProcessor;
@@ -176,7 +177,7 @@ pub fn init_mon_replica_conf(replica_conf: ReplicaConf,
 fn main() {
     let replica_args = ReplicaArgs::parse();
 
-    let reconfiguration_cfg = get_reconfig_config(None).unwrap();
+    let reconfiguration_cfg = get_reconfig_config::<FolderPathConstructor>(None).unwrap();
 
     let (network_cfg, pool_config) = get_network_configurations(reconfiguration_cfg.node_id).unwrap();
 

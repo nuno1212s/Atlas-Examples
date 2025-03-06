@@ -10,3 +10,4 @@ port = 10000
 hostname = "cli0"
 node_type = "Client"
 node_id=1001
+ip="127.0.0.1"

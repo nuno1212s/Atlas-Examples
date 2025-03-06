@@ -8,6 +8,7 @@ use atlas_communication::{NodeInputStub, NodeStubController};
 use atlas_core::ordering_protocol::OrderProtocolTolerance;
 use atlas_core::serialize::NoProtocol;
 use atlas_default_configs::{get_network_configurations, get_reconfig_config};
+use atlas_default_configs::crypto::{FlattenedPathConstructor, FolderPathConstructor};
 use atlas_reconfiguration::message::{ReconfData};
 use atlas_reconfiguration::network_reconfig::NetworkInfo;
 use atlas_reconfiguration::ReconfigurableNodeProtocolHandle;
@@ -46,7 +47,7 @@ impl OrderProtocolTolerance for BFT {
     }
 }
 fn main() {
-    let reconfig_config = get_reconfig_config(None).unwrap();
+    let reconfig_config = get_reconfig_config::<FolderPathConstructor>(None).unwrap();
 
     let node_id = reconfig_config.node_id;
 
